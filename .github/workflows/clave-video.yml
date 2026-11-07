@@ -11,16 +11,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: branding
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
           cache: gradle
+      - name: Prepare clean LibreTube source and apply brand overlay
+        run: |
+          curl -fsSL https://codeload.github.com/libre-tube/LibreTube/zip/refs/heads/master -o /tmp/upstream.zip
+          mkdir upstream
+          unzip -q /tmp/upstream.zip -d upstream
+          mv upstream/LibreTube-master source
+          unzip -oq branding/BRAND_OVERLAY.zip -d source
       - name: Build APK
-        run: ./gradlew assembleDebug --no-daemon
+        working-directory: source
+        run: chmod +x gradlew && ./gradlew assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: clave-video-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: source/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
