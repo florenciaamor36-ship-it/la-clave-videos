@@ -1,1 +1,27 @@
-bmFtZTogQnVpbGQgQ2xhdmUgVmlkZW8gQVBLCm9uOgogIHdvcmtmbG93X2Rpc3BhdGNoOgogIHB1c2g6CiAgICBicmFuY2hlczoKICAgICAgLSB6YXBpYS9sYS1jbGF2ZS1icmFuZApwZXJtaXNzaW9uczoKICBjb250ZW50czogcmVhZApqb2JzOgogIGJ1aWxkOgogICAgcnVucy1vbjogdWJ1bnR1LWxhdGVzdAogICAgc3RlcHM6CiAgICAgIC0gdXNlczogYWN0aW9ucy9jaGVja291dEB2NAogICAgICAtIHVzZXM6IGFjdGlvbnMvc2V0dXAtamF2YUB2NAogICAgICAgIHdpdGg6CiAgICAgICAgICBkaXN0cmlidXRpb246IHRlbXVyaW4KICAgICAgICAgIGphdmEtdmVyc2lvbjogJzE3JwogICAgICAgICAgY2FjaGU6IGdyYWRsZQogICAgICAtIHVzZXM6IGFuZHJvaWQtYWN0aW9ucy9zZXR1cC1hbmRyb2lkQHYzCiAgICAgIC0gbmFtZTogQnVpbGQgQVBLCiAgICAgICAgcnVuOiAuL2dyYWRsZXcgYXNzZW1ibGVEZWJ1ZyAtLW5vLWRhZW1vbgogICAgICAtIHVzZXM6IGFjdGlvbnMvdXBsb2FkLWFydGlmYWN0QHY0CiAgICAgICAgd2l0aDoKICAgICAgICAgIG5hbWU6IGNsYXZlLXZpZGVvLWRlYnVnLWFwawogICAgICAgICAgcGF0aDogYXBwL2J1aWxkL291dHB1dHMvYXBrL2RlYnVnL2FwcC1kZWJ1Zy5hcGsKICAgICAgICAgIGlmLW5vLWZpbGVzLWZvdW5kOiBlcnJvcgogICAgICAgICAgcmV0ZW50aW9uLWRheXM6IDE0Cg==
+name: Build Clave Video APK
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - zapia/la-clave-brand
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+      - uses: android-actions/setup-android@v3
+      - name: Build APK
+        run: ./gradlew assembleDebug --no-daemon
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clave-video-debug-apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
