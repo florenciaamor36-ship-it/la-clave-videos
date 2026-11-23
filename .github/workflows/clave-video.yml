@@ -20,10 +20,10 @@ jobs:
           cache: gradle
       - name: Prepare clean LibreTube source and apply brand overlay
         run: |
-          curl -fsSL https://codeload.github.com/libre-tube/LibreTube/zip/refs/heads/master -o /tmp/upstream.zip
+          curl -fsSL https://codeload.github.com/libre-tube/LibreTube/zip/424beb3e47a5a7d3486cf4080b8e14322369fba0 -o /tmp/upstream.zip
           mkdir upstream
           unzip -q /tmp/upstream.zip -d upstream
-          mv upstream/LibreTube-master source
+          mv upstream/LibreTube-424beb3e47a5a7d3486cf4080b8e14322369fba0 source
           unzip -oq branding/BRAND_OVERLAY.zip -d source
       - name: Build APK
         working-directory: source
